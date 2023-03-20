@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Firebase Analytics Dashboard</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+	<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+		<h1 class="text-3xl font-bold text-gray-800 mb-4">Firebase Analytics Dashboard</h1>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div class="bg-white overflow-hidden shadow-md rounded-lg p-6">
+				<h2 class="text-xl font-semibold text-gray-800 mb-2">User Engagement</h2>
+				<canvas id="userEngagementChart"></canvas>
+			</div>
+			<div class="bg-white overflow-hidden shadow-md rounded-lg p-6">
+				<h2 class="text-xl font-semibold text-gray-800 mb-2">Retention Rate</h2>
+				<canvas id="retentionRateChart"></canvas>
+			</div>
+			<div class="bg-white overflow-hidden shadow-md rounded-lg p-6">
+				<h2 class="text-xl font-semibold text-gray-800 mb-2">Crash Reporting</h2>
+				<canvas id="crashReportingChart"></canvas>
+			</div>
+		</div>
+		<div class="mt-8 bg-white overflow-hidden shadow-md rounded-lg p-6">
+			<h2 class="text-xl font-semibold text-gray-800 mb-2">Performance Monitoring</h2>
+			<table class="min-w-full divide-y divide-gray-200">
+				<thead>
+					<tr>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white divide-y divide-gray-200">
+					<tr>
+						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Load Time</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.3s</td>
+					</tr>
+					<tr>
+						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Response Time</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.6s</td>
+					</tr>
+					<tr>
+						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Error Rate</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.2%</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+
+
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js"></script>
+    <script>
+      // Initialize Firebase
+      const firebaseConfig = {
+        // Your Firebase project configuration goes here
+      };
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    
+      // Fetch user engagement data from Firebase
+      const userEngagementData = [];
+      firebase.analytics().getUserEngagement().then((engagementData) => {
+        for (const [date, engagement] of Object.entries(engagementData)) {
+          userEngagementData.push({ x: date, y: engagement });
+        }
+    
+        // Display user engagement data in chart
+        const userEngagementChart = new Chart(document.getElementById("userEngagementChart"), {
+          type: "line",
+          data: {
+            datasets: [
+              {
+                label: "User Engagement",
+                data: userEngagementData,
+                fill: false,
+                borderColor: "#3182ce",
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            scales: {
+              x: {
+                type: "time",
+                time: {
+                  unit: "day"
+                }
+              },
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      });
+    </script>
+    
+
+
+
+
+
+
+
+
+</body>
+</html>
